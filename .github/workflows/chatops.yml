@@ -11,26 +11,26 @@ jobs:
     name: ChatOps
     runs-on: ubuntu-latest
 
-  steps:
-    - uses: actions/github-script@v6
-      id: add-comment
-      with:
-        script: |
-          github.rest.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: '👋 Updating ephemeral image and labeling PR for deploy...'
-          })
-    - name: SHow result
-      run: echo "${{steps.add-comment.outputs.result}}"
-    - name: Update comment
-      uses: actions/github-script@v6
-      with:
-        script: |
-          github.rest.issues.updateComment({
-            comment_id: ${{steps.add-comment.outputs.result.comment_id}},
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: '👋 Updating ephemeral image and labeling PR for deploy... Done!'
-          })
+    steps:
+      - uses: actions/github-script@v6
+        id: add-comment
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '👋 Updating ephemeral image and labeling PR for deploy...'
+            })
+      - name: SHow result
+        run: echo "${{steps.add-comment.outputs.result}}"
+      - name: Update comment
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.updateComment({
+              comment_id: ${{steps.add-comment.outputs.result.comment_id}},
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '👋 Updating ephemeral image and labeling PR for deploy... Done!'
+            })
