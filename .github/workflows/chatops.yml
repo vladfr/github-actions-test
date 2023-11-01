@@ -18,11 +18,11 @@ jobs:
           BUILD_URL: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         with:
           script: |
-            console.log(context)
+            console.log(context);
             octokit.rest.reactions.createForIssueComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              comment_id: context.comment.id,
+              comment_id: context.comment.comment_id,
               "eyes",
             });
             const res = await github.rest.issues.createComment({
@@ -30,8 +30,8 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: '👋 Updating ephemeral image and labeling PR for deploy. [See build](${{ env.BUILD_URL }})...'
-            })
-            console.log(res)
+            });
+            console.log(res);
       - name: Show result
         run: echo "${{steps.add-comment.outputs.result}}"
       - name: Update comment
