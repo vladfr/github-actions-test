@@ -25,6 +25,12 @@ jobs:
               body: '👋 Updating ephemeral image and labeling PR for deploy. [See build](${{ env.BUILD_URL }})...'
             })
             console.log(res)
+            octokit.rest.reactions.createForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: context.comment.id,
+              "eyes",
+            });
       - name: Show result
         run: echo "${{steps.add-comment.outputs.result}}"
       - name: Update comment
