@@ -31,13 +31,11 @@ jobs:
               repo: context.repo.repo,
               body: '👋 Updating ephemeral image and labeling PR for deploy. [See build](${{ env.BUILD_URL }})...'
             });
-            return "comment_id="+res.data.id;
-      - name: Show result
-        run: echo "${{steps.add-comment.outputs}}"
+            return res.data.id;// return the comment id that we created
       - name: Update comment
         uses: actions/github-script@v6
         env:
-          COMMENT_ID: "${{ steps.add-comment.outputs.result.comment_id }}"
+          COMMENT_ID: "${{ steps.add-comment.outputs.result }}"
         with:
           script: |
             github.rest.issues.updateComment({
