@@ -17,6 +17,7 @@ jobs:
       - uses: actions/github-script@v6
         id: add-comment
         with:
+          result-encoding: string
           script: |
             github.rest.reactions.createForIssueComment({
               owner: context.repo.owner,
@@ -32,7 +33,7 @@ jobs:
             });
             return "comment_id="+res.data.id;
       - name: Show result
-        run: echo "${{steps.add-comment.outputs.result}}"
+        run: echo "${{steps.add-comment.outputs}}"
       - name: Update comment
         uses: actions/github-script@v6
         env:
