@@ -10,23 +10,27 @@ jobs:
   chatops:
     name: ChatOps
     runs-on: ubuntu-latest
+    env:
+      BUILD_URL: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
     steps:
       - uses: actions/github-script@v6
         id: add-comment
-        env:
-          BUILD_URL: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         with:
           script: |
-            console.log(context);
-
+            octokit.rest.reactions.createForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: context.comment.id,
+              content: "eyes",
+            });
             const res = await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: '👋 Updating ephemeral image and labeling PR for deploy. [See build](${{ env.BUILD_URL }})...'
             });
-            console.log(res);
+            return "comment_id="+res.data.id
       - name: Show result
         run: echo "${{steps.add-comment.outputs.result}}"
       - name: Update comment
@@ -34,9 +38,8 @@ jobs:
         with:
           script: |
             github.rest.issues.updateComment({
-              comment_id: ${{steps.add-comment.outputs.result.id}},
+              comment_id: ${{steps.add-comment.outputs.result.comment_id}},
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '👋 Updating ephemeral image and labeling PR for deploy... Done!'
+              body: '👋 Updating ephemeral image and labeling PR for deploy. [Done!](${{ env.BUILD_URL }})'
             })
-          result-encoding: string
