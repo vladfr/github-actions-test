@@ -30,7 +30,7 @@ jobs:
               repo: context.repo.repo,
               body: '👋 Updating ephemeral image and labeling PR for deploy. [See build](${{ env.BUILD_URL }})...'
             });
-            return {"comment_id": res.data.id}
+            return "comment_id="+res.data.id;
       - name: Show result
         run: echo "${{steps.add-comment.outputs.result}}"
       - name: Update comment
