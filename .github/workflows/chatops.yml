@@ -17,9 +17,8 @@ jobs:
       - uses: actions/github-script@v6
         id: add-comment
         with:
-          result-encoding: string
           script: |
-            github.rest.reactions.createForIssueComment({
+            const rec = await github.rest.reactions.createForIssueComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               comment_id: context.payload.comment.id,
@@ -31,11 +30,15 @@ jobs:
               repo: context.repo.repo,
               body: '👋 Updating ephemeral image and labeling PR for deploy. [See build](${{ env.BUILD_URL }})...'
             });
-            return res.data.id;// return the comment id that we created
+            return {
+              "comment_id": res.data.id,
+              "reaction_id": rec.data.id
+            };
       - name: Update comment
         uses: actions/github-script@v6
         env:
-          COMMENT_ID: "${{ steps.add-comment.outputs.result }}"
+          COMMENT_ID: "${{ fromJson(steps.add-comment.outputs.result).comment_id }}"
+          REACTION_ID: "${{ fromJson(steps.add-comment.outputs.result).reaction_id }}"
         with:
           script: |
             github.rest.issues.updateComment({
@@ -44,3 +47,15 @@ jobs:
               repo: context.repo.repo,
               body: '👋 Updating ephemeral image and labeling PR for deploy. [Done!](${{ env.BUILD_URL }})'
             })
+            github.rest.reactions.deleteForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: context.payload.comment.id,
+              reaction_id: "${{ env.REACTION_ID }}"
+            });
+            await github.rest.reactions.createForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: context.payload.comment.id,
+              content: "+1",
+            });
