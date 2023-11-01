@@ -35,10 +35,12 @@ jobs:
         run: echo "${{steps.add-comment.outputs.result}}"
       - name: Update comment
         uses: actions/github-script@v6
+        env:
+          COMMENT_ID: "${{ steps.add-comment.outputs.result.comment_id }}"
         with:
           script: |
             github.rest.issues.updateComment({
-              comment_id: "${{steps.add-comment.outputs.result.comment_id}}",
+              comment_id: "${{ env.COMMENT_ID }}",
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: '👋 Updating ephemeral image and labeling PR for deploy. [Done!](${{ env.BUILD_URL }})'
