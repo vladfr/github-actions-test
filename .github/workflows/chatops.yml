@@ -39,13 +39,14 @@ jobs:
         env:
           COMMENT_ID: "${{ fromJson(steps.add-comment.outputs.result).comment_id }}"
           REACTION_ID: "${{ fromJson(steps.add-comment.outputs.result).reaction_id }}"
+          STEP_LABELED: "${{ steps.add-comment.outcome == 'success' }} ? 'green_circle' : 'red_circle'"
         with:
           script: |
             github.rest.issues.updateComment({
               comment_id: "${{ env.COMMENT_ID }}",
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '👋 Updating ephemeral image and labeling PR for deploy. [Done!](${{ env.BUILD_URL }})'
+              body: ':${{ env.STEP_LABELED }}: Updating ephemeral image and labeling PR for deploy. [Done!](${{ env.BUILD_URL }})'
             })
             github.rest.reactions.deleteForIssueComment({
               owner: context.repo.owner,
