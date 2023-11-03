@@ -39,7 +39,7 @@ jobs:
         env:
           COMMENT_ID: "${{ fromJson(steps.add-comment.outputs.result).comment_id }}"
           REACTION_ID: "${{ fromJson(steps.add-comment.outputs.result).reaction_id }}"
-          STEP_LABELED: "${{ steps.add-comment.outcome == 'success' }} ? 'green_circle' : 'red_circle'"
+          STEP_LABELED: "${{ steps.add-comment.outcome == 'success' && 'green_circle' || 'red_circle'}}"
         with:
           script: |
             github.rest.issues.updateComment({
