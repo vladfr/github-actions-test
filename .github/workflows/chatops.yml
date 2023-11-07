@@ -47,7 +47,7 @@ jobs:
               comment_id: "${{ env.COMMENT_ID }}",
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: ':${{ env.STEP_LABELED }}: Updating ephemeral image and labeling PR for deploy. [Done!](${{ env.BUILD_URL }}) \n${{  env.DEBUG_RUN }}}}'
+              body: ':${{ env.STEP_LABELED }}: Updating ephemeral image and labeling PR for deploy. [Done!](${{ env.BUILD_URL }}) \n${{  env.DEBUG_RUN }}'
             })
             github.rest.reactions.deleteForIssueComment({
               owner: context.repo.owner,
