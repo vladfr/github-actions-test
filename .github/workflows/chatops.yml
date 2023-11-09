@@ -55,7 +55,15 @@ jobs:
               comment_id: "${{ env.COMMENT_ID }}",
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: ':${{ env.STEP_LABELED }}: Updating ephemeral image and labeling PR for deploy. [Done!](${{ env.BUILD_URL }}) \n${{  env.DEBUG_RUN }}'
+              body: `**Hello! :wave:**
+
+                I'm a bot that helps with the deployment of ephemeral images. I've detected that you've commented on this PR, so I'm going to start the process of deploying an ephemeral image for you.
+
+                - your PR number is \`${{ github.event.issue.number }}\`
+                - and your PR title is \`${{ github.event.issue.title }}\`
+                - and you are \`${{ github.actor }}\`
+                - and you look like a cat :cat: meow :smile_cat:
+              `
             })
             github.rest.reactions.deleteForIssueComment({
               owner: context.repo.owner,
